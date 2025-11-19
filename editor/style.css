@@ -1,0 +1,54 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: #1B2838;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1rem;
+    width: 100%;
+}
+main{
+  background-color: transparent;
+  width: 720px;
+  height: 1280px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  outline: 1px solid #ff00ff;
+}
+section{
+    display: flex;
+    gap:2rem;
+}
+section button{
+    color: #fff;
+    padding: .5rem;
+    border: none;
+    cursor: pointer;
+    background-color: #5f8311;
+    border-radius: 0.5em;
+}
+.imagem {
+  z-index: 1; 
+  position: absolute;
+}
+.grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; 
+  background-image:
+      linear-gradient(to right, #ff00ff 1px, transparent 1px),
+      linear-gradient(to bottom, #ff00ff 1px, transparent 1px);
+  background-size: 79.9px 79.9px; 
+  z-index: 7; 
+  display: none; 
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar</title>
+    <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/gerenciar.css">
+</head>
+
+<body>
+    <section id="upload-section">
+        <article>
+            <label for="image-upload">Imagem</label>
+            <input type="file" id="image-upload" accept="image/*">
+        </article>
+
+        <article>
+            <label for="json-upload">JSON</label>
+            <input type="file" id="json-upload" accept=".json">
+        </article>
+
+        <button id="save-json" disabled>Salvar Lista</button>
+    </section>
+
+    <section id="image-list-section">
+        <div id="image-grid">
+        </div>
+    </section>
+
+    <script src="assets/js/gerenciar.js"></script>
+</body>
+
+</html>
