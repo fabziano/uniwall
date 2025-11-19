@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-s0ale=1.0">
+    <title>Dona Berê</title>
+    <style>
+:root {
+    --primary-color: #00796B;
+    --secondary-color: #FFC107;
+    --danger-color: #D32F2F;
+    --background-color: #ECEFF1;
+    --card-color: #ffffff;
+    --text-color: #263238;
+    --border-radius: 6px;
+    --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 10px;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+
+h1 {
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.pdv-container {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1.5fr 1fr;
+    min-height: 100vh;
+}
+
+.panel {
+    background-color: var(--card-color);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.add-product-controls {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+}
+
+#productCodeInput {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+#productCodeInput::placeholder {
+    color: #999;
+}
+
+.product-list-ref {
+    list-style: none;
+    padding: 0;
+}
+
+.product-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.product-info strong {
+    display: block;
+    font-size: 1em;
+    color: var(--text-color);
+}
+
+.product-info span {
+    font-size: 0.85em;
+    color: #666;
+}
+
+.product-price {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+#cart-panel {
+    position: relative;
+    justify-content: flex-start;
+}
+
+#cart-items {
+    list-style: none;
+    padding: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.cart-line {
+    display: grid;
+    grid-template-columns: 0.5fr 3fr 1fr 1.5fr;
+    gap: 2rem;
+    padding: 8px 0;
+    border-bottom: 1px dotted #ccc;
+    align-items: center;
+}
+
+.cart-line-header {
+    font-weight: bold;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.cart-qty-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 3px 6px;
+    font-size: 0.8em;
+    margin: 0 2px;
+}
+
+.cart-qty-btn-remove {
+    background-color: var(--danger-color);
+}
+
+.cart-summary {
+    padding-top: 10px;
+    border-top: 2px solid var(--primary-color);
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.total-final-line {
+    font-size: 1.6em;
+    font-weight: bold;
+    color: var(--danger-color);
+    margin-top: 10px;
+}
+
+#payment-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.pdv-buttons-group {
+    display: flex;
+    gap: 10px;
+}
+
+.pdv-buttons-group button {
+    flex-grow: 1;
+    width: auto;
+}
+
+.bere-clube-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #E8F5E9;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--primary-color);
+    cursor: pointer;
+}
+
+.bere-clube-toggle label {
+    font-weight: bold;
+    color: #388E3C;
+    cursor: pointer;
+}
+
+.payment-options button {
+    background-color: #1976D2;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.payment-options button:hover {
+    background-color: #1565C0;
+}
+
+.payment-detail {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    margin-top: 10px;
+}
+
+.payment-detail input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.payment-detail button {
+    background-color: var(--primary-color);
+    margin-top: 10px;
+}
+
+.troco-display {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    margin-top: 15px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--card-color);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+
+#invoiceModal .modal-content {
+    max-width: 350px;
+    padding: 20px;
+    font-family: monospace;
+    text-align: left;
+    border: 1px solid #000;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.invoice-header,
+.invoice-footer {
+    text-align: center;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #000;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+}
+
+.invoice-item-line {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    font-size: 0.8em;
+}
+
+.invoice-totals div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    padding: 2px 0;
+}
+
+.invoice-totals .total-line {
+    font-size: 1.1em;
+    font-weight: bold;
+    border-top: 1px dashed #000;
+    padding-top: 5px;
+    margin-top: 5px;
+}
+
+.invoice-footer p {
+    margin: 5px 0;
+}
+
+@media print {
+    body > *:not(#invoiceModal) {
+        display: none;
+    }
+
+    #invoiceModal {
+        display: block !important;
+        position: static;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        background-color: transparent;
+    }
+
+    #invoiceModal .modal-content {
+        box-shadow: none;
+        border: none;
+        max-width: 350px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    #invoiceModal button {
+        display: none;
+    }
+}
+
+#productListModal .modal-content {
+    max-width: 600px;
+    text-align: left;
+}
+
+#full-product-list-content {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+#exit-container {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+    display: none;
+    text-align: center;
+}
+
+#exit-container h2 {
+    color: var(--danger-color);
+}
+
+#paymentModal .modal-content {
+    max-width: 450px;
+    text-align: left;
+}
+.payment-modal-info {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    text-align: center;
+}
+
+
+@media (max-width: 900px) {
+    .pdv-container {
+        grid-template-columns: 1fr;
+    }
+
+    #cart-panel,
+    #payment-panel {
+        max-height: none;
+    }
+
+    #cart-panel {
+        order: 1;
+    }
+
+    #payment-panel {
+        order: 2;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="pdv-container" id="pdv-main">
+
+        <div id="cart-panel" class="panel">
+            
+            <div class="add-product-controls">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <input type="number" id="productCodeInput" placeholder="Digite o Código" min="1" style="flex-grow: 1; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
+                    <button style="background-color: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer;" onclick="handleAddProductCode()">Adicionar</button>
+                </div>
+                
+                <div class="pdv-buttons-group">
+                    <button style="background-color: #546E7A; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer;" onclick="showProductListModal()">Produtos</button>
+                    <button style="background-color: #8c8c8c; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer;" onclick="document.getElementById('productCodeInput').focus()">Focar Input</button>
+                </div>
+            </div>
+
+            <div class="cart-line cart-line-header">
+                <span>Qtd</span>
+                <span>Item</span>
+                <span>Un.</span>
+                <span>Total</span>
+            </div>
+
+            <ul id="cart-items">
+            </ul>
+
+            <div class="menu-buttons">
+                <button onclick="showExit()">Sair</button>
+            </div>
+        </div>
+
+        <div id="payment-panel" class="panel">
+            <div class="bere-clube-toggle" id="bere-clube-toggle">
+                <input type="checkbox" id="bereClubeMember">
+                <label for="bereClubeMember">BERÊ CLUBE</label>
+            </div>
+            
+            <div id="consolidado-pagamento" class="cart-summary">
+            </div>
+            
+            <div class="payment-options">
+                <button id="finalizar-venda-btn" onclick="startPayment(null)" style="background-color: var(--danger-color); color: white; padding: 15px; font-size: 1.2em; font-weight: bold; margin-top: 10px;">
+                    FINALIZAR VENDA
+                </button>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <div id="exit-container" class="panel">
+        <h2>Sair</h2>
+        <p id="relatorio-final" style="font-size: 1.1em;"></p>
+        <button class="menu-buttons" onclick="resetAndShowPDV()">Voltar</button>
+    </div>
+    
+    <div id="paymentModal" class="modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div id="payment-modal-content">
+            </div>
+            <button id="close-payment-modal" style="margin-top: 20px; background-color: #546E7A; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer;" onclick="closePaymentModal()">Cancelar Pagamento</button>
+        </div>
+    </div>
+
+    <div id="invoiceModal" class="modal">
+        <div class="modal-content">
+            <div id="cupom-content">
+                <div class="invoice-header">
+                    <p>MERCEARIA DA DONA BERÊ</p>
+                    <p>Av. das Cataratas, 1118 - Foz do Iguaçu - PR</p>
+                    <p>CNPJ: 00.000.000/0001-00</p>
+                    <p>CUPOM FISCAL NÃO TEM VALOR LEGAL</p>
+                </div>
+                <div id="invoice-details">
+                </div>
+                <div class="invoice-footer">
+                    <p>VENDA #<span id="invoice-venda-num"></span> - <span id="invoice-data"></span></p>
+                    <p>Você esta na Feira das Profissões 2025</p>
+                </div>
+            </div>
+            <div class="pdv-buttons-group" style="margin-top: 20px;">
+                <button style="background-color: #4CAF50;" onclick="printInvoice()">Imprimir Cupom</button>
+                <button style="background-color: #1976D2;" onclick="closeInvoiceModal()">Nova Venda</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="productListModal" class="modal">
+        <div class="modal-content" style="max-width: 600px; text-align: left;">
+            <h3 style="color: var(--primary-color);">Lista de Produtos</h3>
+            <div id="full-product-list-content" style="max-height: 400px; overflow-y: auto;">
+            </div>
+            <button id="close-product-list-btn" onclick="closeProductListModal()">Fechar</button>
+        </div>
+    </div>
+
+    <script>
+        class ProductModel {
+    constructor() {
+        this.produtos = [
+            { codigo: 11, nome: "Detergente", valor: 1.99 },
+            { codigo: 12, nome: "Sabão em Pó (1kg)", valor: 8.99 },
+            { codigo: 13, nome: "Esponja", valor: 1.50 },
+            { codigo: 14, nome: "Amaciante (1Lt)", valor: 15.00 },
+            { codigo: 21, nome: "Café", valor: 19.99 },
+            { codigo: 22, nome: "Leite (cx)", valor: 5.90 },
+            { codigo: 23, nome: "Arroz (1kg)", valor: 4.50 },
+            { codigo: 24, nome: "Feijão Preto (1kg)", valor: 8.00 },
+            { codigo: 25, nome: "Açucar (1kg)", valor: 5.00 },
+            { codigo: 31, nome: "Pão de Forma", valor: 9.50 },
+            { codigo: 32, nome: "Pão Integral", valor: 12.50 },
+            { codigo: 33, nome: "Pão Francês (Unid)", valor: 1.90 },
+            { codigo: 34, nome: "Sonho", valor: 8.50 }
+        ];
+    }
+
+    findProduct(codigo) {
+        return this.produtos.find(p => p.codigo === codigo);
+    }
+
+    getAllProducts() {
+        return this.produtos;
+    }
+}
+
+class CartService {
+    constructor(productModel, clubeDiscount) {
+        this.productModel = productModel;
+        this.clubeDiscount = clubeDiscount;
+        this.carrinho = [];
+        this.isMember = false;
+    }
+
+    setMemberStatus(isMember) {
+        this.isMember = isMember;
+    }
+
+    addItem(codigo, quantidade) {
+        const produto = this.productModel.findProduct(codigo);
+        if (!produto) return false;
+
+        const valorUnitarioFinal = produto.valor;
+
+        const itemNovo = {
+            codigo: produto.codigo,
+            nome: produto.nome,
+            valorOriginal: produto.valor,
+            valorUnitarioFinal: valorUnitarioFinal,
+            quantidade: quantidade,
+            subtotal: valorUnitarioFinal * quantidade
+        };
+
+        const existingItem = this.carrinho.find(item => item.codigo === codigo);
+
+        if (existingItem) {
+            existingItem.quantidade += quantidade;
+            existingItem.subtotal = existingItem.quantidade * existingItem.valorUnitarioFinal;
+        } else {
+            this.carrinho.push(itemNovo);
+        }
+        return true;
+    }
+
+    updateQuantity(index, delta) {
+        if (this.carrinho[index]) {
+            this.carrinho[index].quantidade += delta;
+
+            if (this.carrinho[index].quantidade <= 0) {
+                this.removeItem(index);
+            } else {
+                this.carrinho[index].subtotal = this.carrinho[index].quantidade * this.carrinho[index].valorUnitarioFinal;
+            }
+        }
+    }
+
+    removeItem(index) {
+        this.carrinho.splice(index, 1);
+    }
+
+    getCartItems() {
+        return this.carrinho;
+    }
+
+    getTotals() {
+        const totalGeral = this.carrinho.reduce((acc, item) => acc + item.subtotal, 0);
+
+        let totalDesconto = 0;
+        let totalFinal = totalGeral;
+
+        if (this.isMember) {
+            totalDesconto = totalGeral * this.clubeDiscount;
+            totalFinal = totalGeral - totalDesconto;
+        }
+
+        return { totalGeral, totalFinal, totalDesconto };
+    }
+
+    isEmpty() {
+        return this.carrinho.length === 0;
+    }
+
+    reset() {
+        this.carrinho = [];
+        this.isMember = false;
+    }
+}
+
+class ViewRenderer {
+    constructor(cartService, clubeDiscount) {
+        this.cartService = cartService;
+        this.clubeDiscount = clubeDiscount;
+    }
+
+    renderCart() {
+        const cartItemsElement = document.getElementById('cart-items');
+        cartItemsElement.innerHTML = '';
+        const carrinho = this.cartService.getCartItems();
+
+        carrinho.forEach((item, index) => {
+            const precoDisplay = `R$ ${item.valorUnitarioFinal.toFixed(2)}`;
+            const subtotalDisplay = `R$ ${item.subtotal.toFixed(2)}`;
+
+            const listItem = document.createElement('li');
+            listItem.className = 'cart-line';
+            listItem.innerHTML = `
+<span>
+    <button class="cart-qty-btn decrease-qty-btn" data-index="${index}">-</button>
+    ${item.quantidade}
+    <button class="cart-qty-btn increase-qty-btn" data-index="${index}">+</button>
+</span>
+<span>${item.nome}</span>
+<span>${precoDisplay}</span>
+<span>
+    ${subtotalDisplay}
+    <button class="cart-qty-btn cart-qty-btn-remove remove-item-btn" data-index="${index}">X</button>
+</span>
+`;
+            cartItemsElement.appendChild(listItem);
+        });
+        this.renderPaymentConsolidado();
+    }
+
+    renderPaymentConsolidado() {
+        const consolidado = document.getElementById('consolidado-pagamento');
+        const { totalGeral, totalFinal, totalDesconto } = this.cartService.getTotals();
+
+        const discountStyle = totalDesconto > 0.001 ? "color: green;" : "color: #666;";
+        const discountText = totalDesconto > 0.001
+            ? `Desconto Berê Clube (Total ${(this.clubeDiscount * 100).toFixed(0)}%):`
+            : `Desconto (Berê Clube):`;
+
+        let html = `
+<div class="summary-line">
+<span>Total Bruto:</span>
+<span>R$ ${totalGeral.toFixed(2)}</span>
+</div>
+<div class="summary-line" style="${discountStyle}">
+    <span>${discountText}</span>
+    <span>- R$ ${totalDesconto.toFixed(2)}</span>
+</div>
+<div class="total-final-line summary-line">
+<span>TOTAL A PAGAR:</span>
+<span>R$ ${totalFinal.toFixed(2)}</span>
+</div>
+`;
+        consolidado.innerHTML = html;
+    }
+
+    renderFullProductList(products) {
+        const listElement = document.getElementById('full-product-list-content');
+        listElement.innerHTML = '';
+
+        const list = document.createElement('ul');
+        list.className = 'product-list-ref';
+
+        products.forEach(produto => {
+            const listItem = document.createElement('li');
+            listItem.className = 'product-item';
+            listItem.innerHTML = `
+<div class="product-info">
+    <strong>CÓD: ${produto.codigo} - ${produto.nome}</strong>
+</div>
+<span class="product-price">R$ ${produto.valor.toFixed(2)}</span>
+`;
+            list.appendChild(listItem);
+        });
+        listElement.appendChild(list);
+    }
+
+    renderRelatorioFinal(vendasRealizadas, totalVendas) {
+        const relatorio = document.getElementById('relatorio-final');
+        relatorio.innerHTML = `
+<p>Total de Vendas Processadas e Finalizadas nesta sessão: <strong>${vendasRealizadas}</strong></p>
+`;
+    }
+
+    showProductListModal(products) {
+        this.renderFullProductList(products);
+        document.getElementById('productListModal').style.display = 'flex';
+    }
+
+    closeProductListModal() {
+        document.getElementById('productListModal').style.display = 'none';
+        const modalContent = document.getElementById('productListModal').querySelector('.modal-content');
+        modalContent.innerHTML = `
+<h3 style="color: var(--primary-color);">Lista Completa de Produtos (Referência)</h3>
+<div id="full-product-list-content" style="max-height: 400px; overflow-y: auto;">
+</div>
+<button id="close-product-list-btn">Fechar</button>
+`;
+        document.getElementById('close-product-list-btn').addEventListener('click', this.closeProductListModal);
+    }
+
+    showInvoiceModal(resumo) {
+        const modalContent = document.getElementById('invoice-details');
+        const dataElement = document.getElementById('invoice-data');
+        const numVendaElement = document.getElementById('invoice-venda-num');
+
+        modalContent.innerHTML = resumo.details;
+        dataElement.textContent = new Date().toLocaleString('pt-BR');
+        numVendaElement.textContent = resumo.vendaNum.toString().padStart(4, '0');
+
+        document.getElementById('invoiceModal').style.display = 'flex';
+    }
+
+    closeInvoiceModal() {
+        document.getElementById('invoiceModal').style.display = 'none';
+    }
+
+    showAvisoModal(title, message) {
+        const modalContent = document.getElementById('productListModal').querySelector('.modal-content');
+        modalContent.innerHTML = `
+<h3 style="color: var(--danger-color);">${title}</h3>
+<p>${message}</p>
+<button id="aviso-ok-btn">OK</button>
+`;
+        document.getElementById('productListModal').style.display = 'flex';
+        document.getElementById('aviso-ok-btn').addEventListener('click', () => this.closeProductListModal());
+    }
+
+    showPaymentModal(content) {
+        document.getElementById('payment-modal-content').innerHTML = content;
+        document.getElementById('paymentModal').style.display = 'flex';
+    }
+
+    closePaymentModal() {
+        document.getElementById('paymentModal').style.display = 'none';
+    }
+
+    showExit(vendasRealizadas, totalVendas) {
+        document.getElementById('pdv-main').style.display = 'none';
+        document.getElementById('exit-container').style.display = 'block';
+        this.renderRelatorioFinal(vendasRealizadas, totalVendas);
+    }
+
+    showPDV() {
+        document.getElementById('exit-container').style.display = 'none';
+        document.getElementById('pdv-main').style.display = 'grid';
+    }
+}
+
+class SaleManager {
+    constructor(cartService, viewRenderer, clubeDiscount) {
+        this.cartService = cartService;
+        this.viewRenderer = viewRenderer;
+        this.vendasRealizadas = 0;
+        this.totalVendasAcumulado = 0.0;
+        this.clubeDiscount = clubeDiscount;
+    }
+
+    startPayment(type) {
+        if (this.cartService.isEmpty()) {
+            this.viewRenderer.showAvisoModal("Atenção", "Carrinho vazio! Adicione produtos antes de finalizar.");
+            return;
+        }
+
+        const { totalFinal } = this.cartService.getTotals();
+        let content = '';
+
+        if (!type) {
+            content = `
+                <h4>Selecione a Forma de Pagamento</h4>
+                <div class="payment-modal-info">TOTAL A PAGAR: R$ ${totalFinal.toFixed(2)}</div>
+                <div class="payment-options">
+                    <button id="btn-pay-dinheiro" style="background-color: #4CAF50; color: white;">I. DINHEIRO</button>
+                    <button id="btn-pay-cartao" style="background-color: #1976D2; color: white;">II. CARTÃO</button>
+                    <button id="btn-pay-pix" style="background-color: var(--secondary-color); color: var(--text-color);">III. PIX</button>
+                </div>
+            `;
+            this.viewRenderer.showPaymentModal(content);
+            document.getElementById('btn-pay-dinheiro').onclick = () => this.startPayment('dinheiro');
+            document.getElementById('btn-pay-cartao').onclick = () => this.startPayment('cartao');
+            document.getElementById('btn-pay-pix').onclick = () => this.startPayment('pix');
+        } else if (type === 'dinheiro') {
+            content = `
+                <h4>Pagamento em Dinheiro</h4>
+                <div class="payment-modal-info">TOTAL A PAGAR: R$ ${totalFinal.toFixed(2)}</div>
+                <label for="valorRecebidoModal">Valor Recebido (R$):</label>
+                <input type="number" id="valorRecebidoModal" min="0.01" step="0.01" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                <button id="finalizarDinheiroModalBtn" style="background-color: var(--primary-color); color: white; border: none; padding: 12px; border-radius: 4px; font-size: 16px; cursor: pointer; width: 100%; margin-top: 10px;">Finalizar Venda</button>
+                <p id="troco-display-modal" class="troco-display"></p>
+            `;
+            this.viewRenderer.showPaymentModal(content);
+            this.setupDinheiroPayment(totalFinal);
+        } else if (type === 'cartao') {
+            content = `
+                <h4>Pagamento com Cartão</h4>
+                <div class="payment-modal-info">TOTAL A PAGAR: R$ ${totalFinal.toFixed(2)}</div>
+                <p>Confirme o status da máquina:</p>
+                <div class="pdv-buttons-group">
+                    <button id="btn-card-ok" style="background-color: #4CAF50; color: white;">1 - Pagamento Ok</button>
+                    <button id="btn-card-nok" style="background-color: var(--danger-color); color: white;">0 - Pagamento Não Ok</button>
+                </div>
+            `;
+            this.viewRenderer.showPaymentModal(content);
+            document.getElementById('btn-card-ok').onclick = () => this.finishCardOrPixPayment('cartao', 1);
+            document.getElementById('btn-card-nok').onclick = () => this.finishCardOrPixPayment('cartao', 0);
+        } else if (type === 'pix') {
+            content = `
+                <h4>Pagamento com PIX</h4>
+                <div class="payment-modal-info">TOTAL A PAGAR: R$ ${totalFinal.toFixed(2)}</div>
+                <p>Confirme o recebimento na conta:</p>
+                <div class="pdv-buttons-group">
+                    <button id="btn-pix-ok" style="background-color: #4CAF50; color: white;">1 - Recebido Ok</button>
+                    <button id="btn-pix-nok" style="background-color: var(--danger-color); color: white;">0 - Não Recebido</button>
+                </div>
+            `;
+            this.viewRenderer.showPaymentModal(content);
+            document.getElementById('btn-pix-ok').onclick = () => this.finishCardOrPixPayment('pix', 1);
+            document.getElementById('btn-pix-nok').onclick = () => this.finishCardOrPixPayment('pix', 0);
+        }
+    }
+
+    setupDinheiroPayment(totalFinal) {
+        const inputElement = document.getElementById('valorRecebidoModal');
+        const finalizarBtn = document.getElementById('finalizarDinheiroModalBtn');
+
+        const updateTroco = () => {
+            const valorRecebido = parseFloat(inputElement.value);
+            if (!isNaN(valorRecebido) && valorRecebido >= totalFinal) {
+                const troco = valorRecebido - totalFinal;
+                document.getElementById('troco-display-modal').textContent = `TROCO: R$ ${troco.toFixed(2)}`;
+            } else {
+                document.getElementById('troco-display-modal').textContent = '';
+            }
+        };
+
+        inputElement.addEventListener('input', updateTroco);
+        inputElement.addEventListener('keypress', (event) => {
+            if (event.keyCode === 13) this.finishDinheiroPayment();
+        });
+        finalizarBtn.addEventListener('click', () => this.finishDinheiroPayment());
+        inputElement.focus();
+    }
+
+    finishDinheiroPayment() {
+        const { totalGeral, totalFinal, totalDesconto } = this.cartService.getTotals();
+        const valorRecebido = parseFloat(document.getElementById('valorRecebidoModal').value);
+
+        if (isNaN(valorRecebido) || valorRecebido <= 0) {
+            this.viewRenderer.showAvisoModal("Erro de Pagamento", "Por favor, insira o valor recebido.");
+            return;
+        }
+
+        if (valorRecebido < totalFinal) {
+            this.viewRenderer.showAvisoModal("Erro de Pagamento", "O valor recebido é insuficiente.");
+            return;
+        }
+
+        const troco = valorRecebido - totalFinal;
+        const statusClube = totalDesconto > 0 ? `Membro Berê Clube c/ Desconto Total (${(this.clubeDiscount * 100).toFixed(0)}%)` : 'Sem Desconto';
+
+        this.viewRenderer.closePaymentModal();
+        this.finalizeSale(totalGeral, totalFinal, totalDesconto, valorRecebido, troco, `Dinheiro`, statusClube);
+    }
+
+    finishCardOrPixPayment(type, status) {
+        const { totalGeral, totalFinal, totalDesconto } = this.cartService.getTotals();
+        const formaPagamento = type === 'cartao' ? 'Cartão' : 'PIX';
+        const statusClube = totalDesconto > 0 ? `Membro Berê Clube c/ Desconto Total (${(this.clubeDiscount * 100).toFixed(0)}%)` : 'Sem Desconto';
+
+        if (status === 1) {
+            this.viewRenderer.closePaymentModal();
+            this.finalizeSale(totalGeral, totalFinal, totalDesconto, totalFinal, 0, formaPagamento, statusClube);
+        } else {
+            this.viewRenderer.showAvisoModal("Pagamento Recusado", `Pagamento via ${formaPagamento} não foi concluído. Escolha outra forma de pagamento.`);
+        }
+    }
+
+    generateInvoice(valorBruto, valorTotalPago, valorDesconto, valorRecebido, troco, formaPagamento, statusClube) {
+        let details = '<p style="border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 5px;">PRODUTO (QTD x UN) - VALOR</p>';
+
+        this.cartService.getCartItems().forEach(item => {
+            const nomeCurto = item.nome.substring(0, 20);
+            const valorUnid = item.valorUnitarioFinal.toFixed(2).padStart(5, ' ');
+            const subtotal = item.subtotal.toFixed(2).padStart(6, ' ');
+
+            details += `<div class="invoice-item-line"><span>${nomeCurto} (${item.quantidade}x)</span><span>${valorUnid}</span><span>${subtotal}</span></div>`;
+        });
+
+        details += '<p style="border-top: 1px dashed #000; margin-top: 5px; padding-top: 5px;"></p>';
+
+        details += `<div class="invoice-totals">`;
+        details += `<div><span>Total Bruto:</span><span>R$ ${valorBruto.toFixed(2)}</span></div>`;
+
+        if (valorDesconto > 0) {
+            details += `<div style="color: green;"><span>Desconto Total:</span><span>- R$ ${valorDesconto.toFixed(2)}</span></div>`;
+        }
+
+        details += `<div class="total-line"><span>TOTAL A PAGAR:</span><span>R$ ${valorTotalPago.toFixed(2)}</span></div>`;
+        details += `<div><span>Forma Pagamento:</span><span>${formaPagamento}</span></div>`;
+
+        if (formaPagamento.includes('Dinheiro')) {
+            details += `<div><span>Valor Recebido:</span><span>R$ ${valorRecebido.toFixed(2)}</span></div>`;
+            details += `<div style="font-size: 1.2em; font-weight: bold; color: var(--primary-color);"><span>Troco:</span><span>R$ ${troco.toFixed(2)}</span></div>`;
+        }
+
+        details += `<p style="margin-top: 10px; font-size: 0.8em;">${statusClube}</p>`;
+
+        details += `</div>`;
+
+        return { details, vendaNum: this.vendasRealizadas };
+    }
+
+    finalizeSale(valorBruto, valorTotalPago, valorDesconto, valorRecebido, troco, formaPagamento, statusClube) {
+        this.vendasRealizadas++;
+        this.totalVendasAcumulado += valorTotalPago;
+
+        const resumoNota = this.generateInvoice(valorBruto, valorTotalPago, valorDesconto, valorRecebido, troco, formaPagamento, statusClube);
+        this.viewRenderer.showInvoiceModal(resumoNota);
+        this.cartService.reset();
+        this.viewRenderer.renderCart();
+    }
+}
+
+class App {
+    constructor() {
+        this.DESCONTO_CLUBE_PERCENTUAL = 0.05;
+        this.productModel = new ProductModel();
+        this.cartService = new CartService(this.productModel, this.DESCONTO_CLUBE_PERCENTUAL);
+        this.viewRenderer = new ViewRenderer(this.cartService, this.DESCONTO_CLUBE_PERCENTUAL);
+        this.saleManager = new SaleManager(this.cartService, this.viewRenderer, this.DESCONTO_CLUBE_PERCENTUAL);
+    }
+
+    init() {
+        this.setupGlobalFunctions();
+        this.addEventListeners();
+        this.viewRenderer.renderCart();
+        this.viewRenderer.showPDV();
+    }
+
+    setupGlobalFunctions() {
+        window.handleAddProductCode = this.handleAddProductCode.bind(this);
+        window.showProductListModal = this.showProductListModal.bind(this);
+        window.closeProductListModal = this.viewRenderer.closeProductListModal.bind(this.viewRenderer);
+        window.closeInvoiceModal = this.closeInvoiceModal.bind(this);
+        window.printInvoice = window.print;
+        window.startPayment = this.saleManager.startPayment.bind(this.saleManager);
+        window.closePaymentModal = this.viewRenderer.closePaymentModal.bind(this.viewRenderer);
+        window.showExit = this.showExit.bind(this);
+        window.resetAndShowPDV = this.resetAndShowPDV.bind(this);
+    }
+
+    addEventListeners() {
+        document.getElementById('productCodeInput').addEventListener('keypress', (event) => {
+            if (event.keyCode === 13) this.handleAddProductCode();
+        });
+
+        document.getElementById('bereClubeMember').addEventListener('change', (e) => {
+            this.cartService.setMemberStatus(e.target.checked);
+            this.viewRenderer.renderCart();
+        });
+
+        document.getElementById('cart-items').addEventListener('click', (e) => {
+            const index = parseInt(e.target.getAttribute('data-index'));
+            if (e.target.classList.contains('increase-qty-btn')) {
+                this.cartService.updateQuantity(index, 1);
+                this.viewRenderer.renderCart();
+            } else if (e.target.classList.contains('decrease-qty-btn')) {
+                this.cartService.updateQuantity(index, -1);
+                this.viewRenderer.renderCart();
+            } else if (e.target.classList.contains('remove-item-btn')) {
+                this.cartService.removeItem(index);
+                this.viewRenderer.renderCart();
+            }
+        });
+
+        document.getElementById('close-product-list-btn').addEventListener('click', this.viewRenderer.closeProductListModal.bind(this.viewRenderer));
+    }
+
+    handleAddProductCode() {
+        const inputElement = document.getElementById('productCodeInput');
+        const code = parseInt(inputElement.value);
+
+        if (isNaN(code) || code <= 0) {
+            this.viewRenderer.showAvisoModal("Erro de Código", "Por favor, digite um código de produto válido.");
+            return;
+        }
+
+        const added = this.cartService.addItem(code, 1);
+
+        if (added) {
+            this.viewRenderer.renderCart();
+            inputElement.value = '';
+            inputElement.focus();
+        } else {
+            this.viewRenderer.showAvisoModal("Produto Não Encontrado", `Nenhum produto com o código ${code} foi encontrado. Use a lista de referência para consultar.`);
+        }
+    }
+
+    showProductListModal() {
+        this.viewRenderer.showProductListModal(this.productModel.getAllProducts());
+    }
+
+    closeInvoiceModal() {
+        this.viewRenderer.closeInvoiceModal();
+        document.getElementById('bereClubeMember').checked = false;
+    }
+
+    showExit() {
+        this.viewRenderer.showExit(this.saleManager.vendasRealizadas, this.saleManager.totalVendasAcumulado);
+    }
+
+    resetAndShowPDV() {
+        this.viewRenderer.showPDV();
+        if (!this.cartService.isEmpty()) {
+            this.viewRenderer.showAvisoModal("Atenção", "Venda anterior ainda em andamento. Finalize ou Adicione novos itens.");
+        }
+    }
+}
+
+window.onload = function () {
+    const app = new App();
+    app.init();
+}
+    </script>
+</body>
+</html>
