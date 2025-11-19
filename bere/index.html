@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-s0ale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dona Berê</title>
     <style>
 :root {
@@ -111,7 +111,7 @@ h1 {
 
 .cart-line {
     display: grid;
-    grid-template-columns: 0.5fr 3fr 1fr 1.5fr;
+    grid-template-columns: 1fr 3fr 1fr 1.5fr;    
     gap: 2rem;
     padding: 8px 0;
     border-bottom: 1px dotted #ccc;
@@ -119,6 +119,7 @@ h1 {
 }
 
 .cart-line-header {
+    grid-template-columns: 1fr 3fr 1fr 1.5fr;
     font-weight: bold;
     color: var(--primary-color);
     border-bottom: 2px solid var(--primary-color);
@@ -155,7 +156,7 @@ h1 {
 .total-final-line {
     font-size: 1.6em;
     font-weight: bold;
-    color: var(--danger-color);
+    color: var(--primary-color);
     margin-top: 10px;
 }
 
@@ -402,8 +403,8 @@ h1 {
                 </div>
                 
                 <div class="pdv-buttons-group">
-                    <button style="background-color: #546E7A; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer;" onclick="showProductListModal()">Produtos</button>
-                    <button style="background-color: #8c8c8c; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer;" onclick="document.getElementById('productCodeInput').focus()">Focar Input</button>
+                    <button style="background-color: #546E7A; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer;" onclick="showProductListModal()">Produtos (Ref.)</button>
+                    <button style="background-color: #8c8c8c; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer;" onclick="document.getElementById('productCodeInput').focus()">Focar Input (F1)</button>
                 </div>
             </div>
 
@@ -432,8 +433,8 @@ h1 {
             </div>
             
             <div class="payment-options">
-                <button id="finalizar-venda-btn" onclick="startPayment(null)" style="background-color: var(--danger-color); color: white; padding: 15px; font-size: 1.2em; font-weight: bold; margin-top: 10px;">
-                    FINALIZAR VENDA
+                <button id="finalizar-venda-btn" onclick="startPayment(null)" style="background-color: var(--primary-color); color: white; padding: 15px; font-size: 1.2em; font-weight: bold; margin-top: 10px;">
+                    FINALIZAR VENDA (F2)
                 </button>
             </div>
             
@@ -472,7 +473,6 @@ h1 {
                 </div>
             </div>
             <div class="pdv-buttons-group" style="margin-top: 20px;">
-                <button style="background-color: #4CAF50;" onclick="printInvoice()">Imprimir Cupom</button>
                 <button style="background-color: #1976D2;" onclick="closeInvoiceModal()">Nova Venda</button>
             </div>
         </div>
@@ -491,19 +491,19 @@ h1 {
         class ProductModel {
     constructor() {
         this.produtos = [
-            { codigo: 11, nome: "Detergente", valor: 1.99 },
-            { codigo: 12, nome: "Sabão em Pó (1kg)", valor: 8.99 },
-            { codigo: 13, nome: "Esponja", valor: 1.50 },
-            { codigo: 14, nome: "Amaciante (1Lt)", valor: 15.00 },
-            { codigo: 21, nome: "Café", valor: 19.99 },
-            { codigo: 22, nome: "Leite (cx)", valor: 5.90 },
-            { codigo: 23, nome: "Arroz (1kg)", valor: 4.50 },
-            { codigo: 24, nome: "Feijão Preto (1kg)", valor: 8.00 },
-            { codigo: 25, nome: "Açucar (1kg)", valor: 5.00 },
-            { codigo: 31, nome: "Pão de Forma", valor: 9.50 },
-            { codigo: 32, nome: "Pão Integral", valor: 12.50 },
-            { codigo: 33, nome: "Pão Francês (Unid)", valor: 1.90 },
-            { codigo: 34, nome: "Sonho", valor: 8.50 }
+            { codigo: 1, nome: "Detergente", valor: 1.99 },
+            { codigo: 2, nome: "Sabão em Pó (1kg)", valor: 8.99 },
+            { codigo: 3, nome: "Esponja", valor: 1.50 },
+            { codigo: 4, nome: "Amaciante (1Lt)", valor: 15.00 },
+            { codigo: 5, nome: "Café", valor: 19.99 },
+            { codigo: 6, nome: "Leite (cx)", valor: 5.90 },
+            { codigo: 7, nome: "Arroz (1kg)", valor: 4.50 },
+            { codigo: 8, nome: "Feijão Preto (1kg)", valor: 8.00 },
+            { codigo: 9, nome: "Açucar (1kg)", valor: 5.00 },
+            { codigo: 10, nome: "Pão de Forma", valor: 9.50 },
+            { codigo: 11, nome: "Pão Integral", valor: 12.50 },
+            { codigo: 12, nome: "Pão Francês (Unid)", valor: 1.90 },
+            { codigo: 13, nome: "Sonho", valor: 8.50 }
         ];
     }
 
@@ -639,8 +639,8 @@ class ViewRenderer {
 
         const discountStyle = totalDesconto > 0.001 ? "color: green;" : "color: #666;";
         const discountText = totalDesconto > 0.001
-            ? `Desconto Berê Clube (Total ${(this.clubeDiscount * 100).toFixed(0)}%):`
-            : `Desconto (Berê Clube):`;
+            ? `Desconto (Total ${(this.clubeDiscount * 100).toFixed(0)}%):`
+            : `Desconto:`;
 
         let html = `
 <div class="summary-line">
@@ -979,6 +979,16 @@ class App {
         });
 
         document.getElementById('close-product-list-btn').addEventListener('click', this.viewRenderer.closeProductListModal.bind(this.viewRenderer));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F1') {
+                e.preventDefault();
+                document.getElementById('productCodeInput').focus();
+            } else if (e.key === 'F2') {
+                e.preventDefault();
+                this.saleManager.startPayment(null);
+            }
+        });
     }
 
     handleAddProductCode() {
